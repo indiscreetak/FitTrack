@@ -13,12 +13,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "concurrently": "^4.0.1",
     "config": "^2.0.1",
     "debug": "^4.1.0",
     "express": "^4.16.4",
     "helmet": "^3.14.0",
     "joi": "^14.0.0",
+    "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.3.4",
     "nodemon": "^1.18.4"
   }
