@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
+const validateUser = require('../validation/user');
 
 const User = require('../models/User');
 
@@ -18,6 +19,10 @@ router.post('/register', (req, res) => {
       name: req.body.name,
       password: req.body.password
     });
+
+    const { error } = validateUser(req.body);
+
+    if (error) return res.status(400).json(error.details[0].message);
 
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(newUser.password, salt, (err, hash) => {
@@ -41,8 +46,7 @@ router.post('/login', (req, res) => {
   User.findOne({ name: req.body.name }).then(user => {
     if (!user)
       return res
-        .status(400)
-        .json({ message: 'Incorrect Username or Password' });
+        .status(400).json({ message: 'Incorrect Username or Password' });
     bcrypt.compare(password, user.password).then(isMatch => {
       if (isMatch) {
         const payload = { id: user.id, name: user.name };
