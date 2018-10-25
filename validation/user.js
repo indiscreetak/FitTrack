@@ -6,7 +6,13 @@ validateUser = value => {
       .min(2)
       .max(30)
       .required(),
+    email: Joi.string()
+      .email()
+      .min(8)
+      .max(50)
+      .required(),
     password: Joi.string()
+
       .min(8)
       .max(30)
       .required()
