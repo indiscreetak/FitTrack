@@ -12,7 +12,6 @@ validateUser = value => {
       .max(50)
       .required(),
     password: Joi.string()
-
       .min(8)
       .max(30)
       .required()

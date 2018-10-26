@@ -3,6 +3,8 @@ const app = express();
 const mongoose = require('mongoose');
 const startupDebug = require('debug', 'app:startup');
 const users = require('./routes/users');
+const dashboard = require('./routes/dashboard');
+const passport = require('passport');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -26,7 +28,14 @@ mongoose
   .then(() => console.log('MongoDB connected...'))
   .catch(err => console.log('Error: ', err));
 
+// PASSPORT
+app.use(passport.initialize());
+
+// PASSPORT CONFIG
+require('./config/passport.js')(passport);
+
 app.use('/api/users', users);
+app.use('/api/dashboard', dashboard);
 
 const port = process.env.PORT || 5000;
 

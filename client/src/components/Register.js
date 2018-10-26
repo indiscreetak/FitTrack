@@ -1,8 +1,19 @@
 import React, { Component } from 'react';
-import { Box, Field, Label, Control, Input, Button, Help } from 'bloomer';
+import {
+  Box,
+  Field,
+  Label,
+  Control,
+  Input,
+  Button,
+  Notification
+} from 'bloomer';
 import axios from 'axios';
-import { Spring, config, animated } from 'react-spring';
+import { Spring } from 'react-spring';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { registerUser } from '../store/actions/authActions';
+import PropTypes from 'prop-types';
 
 axios.defaults.baseURL = 'http://localhost:5000';
 
@@ -10,17 +21,21 @@ class Register extends Component {
   state = {
     name: '',
     email: '',
-    password: '',
-    error: ''
+    password: ''
   };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.isAuthenticated) {
+      this.props.history.push('/dashboard');
+    }
+  }
 
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
-    console.log(this.state);
   };
 
   registerUser = e => {
-    console.log('clicked');
+    // this.props.onResetErrors();
     e.preventDefault();
 
     const data = {
@@ -29,17 +44,7 @@ class Register extends Component {
       password: this.state.password
     };
 
-    axios
-      .post('/api/users/register', data)
-      .then(res => {
-        console.log(res);
-        // this.setState({ error: '', name: '', email: '', password: '' });
-        this.props.history.push('/dashboard');
-      })
-      .catch(err => {
-        console.log(err.response.data.message);
-        this.setState({ error: err.response.data.message });
-      });
+    this.props.onRegisterUser(data, this.props.history);
   };
 
   render() {
@@ -65,6 +70,12 @@ class Register extends Component {
                   Register
                 </h1>
                 <Field>
+                  {this.props.errors.message ? (
+                    <Notification isColor="danger">
+                      {this.props.errors.message}
+                    </Notification>
+                  ) : null}
+
                   <Label>Name: </Label>
                   <Control>
                     <Input
@@ -96,7 +107,6 @@ class Register extends Component {
                       onChange={this.handleChange}
                     />
                   </Control>
-                  <Help isColor="danger">{this.state.error}</Help>
                 </Field>
                 <div>{this.state.name}</div>
                 <div>{this.state.password}</div>
@@ -131,4 +141,22 @@ class Register extends Component {
   }
 }
 
-export default withRouter(Register);
+Register.propTypes = {
+  onregisterUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapDispatchToProps = dispatch => ({
+  onRegisterUser: (data, history) => dispatch(registerUser(data, history))
+});
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Register));

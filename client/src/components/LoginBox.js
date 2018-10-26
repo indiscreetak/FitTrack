@@ -1,17 +1,40 @@
 import React, { Component } from 'react';
-import { Box, Field, Label, Control, Input, Button, Help } from 'bloomer';
+import {
+  Box,
+  Field,
+  Label,
+  Control,
+  Input,
+  Button,
+  Notification
+} from 'bloomer';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
-import { Spring, config, animated } from 'react-spring';
+import { Spring } from 'react-spring';
+import { connect } from 'react-redux';
+import { loginUser } from '../store/actions/authActions';
+import PropTypes from 'prop-types';
 
 axios.defaults.baseURL = 'http://localhost:5000';
 
 class LoginBox extends Component {
   state = {
-    name: '',
+    email: '',
     password: '',
-    error: ''
+    errors: []
   };
+
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push('/dashboard');
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.isAuthenticated) {
+      this.props.history.push('/dashboard');
+    }
+  }
 
   handleChange = e => {
     this.setState({ [e.target.name]: e.target.value });
@@ -21,17 +44,10 @@ class LoginBox extends Component {
     e.preventDefault();
 
     const data = {
-      name: this.state.name,
+      email: this.state.email,
       password: this.state.password
     };
-    axios
-      .post('/api/users/login', data)
-      .then(res => {
-        this.props.history.push('/');
-      })
-      .catch(err => this.setState({ error: err.response.data.message }));
-
-    this.setState({ error: null, name: null, password: null });
+    this.props.onLoginUser(data);
   };
 
   render() {
@@ -56,12 +72,17 @@ class LoginBox extends Component {
                 <form onSubmit={this.loginUser}>
                   <Field>
                     <h1 className="title is-2">Login</h1>
-                    <Label>Username: </Label>
+                    {this.props.errors.message ? (
+                      <Notification isColor="danger">
+                        {this.props.errors.message}
+                      </Notification>
+                    ) : null}
+                    <Label>Email: </Label>
                     <Control>
                       <Input
                         type="text"
                         placeholder="Text input"
-                        name="name"
+                        name="email"
                         onChange={this.handleChange}
                         required
                       />
@@ -78,9 +99,8 @@ class LoginBox extends Component {
                         required
                       />
                     </Control>
-                    <Help isColor="danger">{this.state.error}</Help>
                   </Field>
-                  <div>{this.state.name}</div>
+                  <div>{this.state.email}</div>
                   <div>{this.state.password}</div>
                   <Field isGrouped>
                     <Control>
@@ -114,4 +134,24 @@ class LoginBox extends Component {
   }
 }
 
-export default withRouter(LoginBox);
+LoginBox.propTypes = {
+  loginUser: PropTypes.func.isRequired,
+  auth: PropTypes.object.isRequired,
+  errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onLoginUser: data => dispatch(loginUser(data))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(LoginBox));
