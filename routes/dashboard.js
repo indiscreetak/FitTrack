@@ -9,7 +9,6 @@ router.get(
   '/',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    console.log(req);
     res.json({ msg: `Welcome back, ${req.user.name}` });
   }
 );

@@ -110,6 +110,12 @@ class LoginBox extends Component {
                         }}
                         type="submit"
                         isColor="primary"
+                        disabled={
+                          this.state.email.length < 5 &&
+                          this.state.password.length < 8
+                            ? true
+                            : false
+                        }
                       >
                         LOGIN
                       </Button>
