@@ -21,6 +21,9 @@ const navbar = props => (
           LOGOUT
         </Button>
       </NavbarItem>
+      <NavbarItem>
+        <Button isColor="success">SYNC WITH DEVICE</Button>
+      </NavbarItem>
     </NavbarBrand>
   </Navbar>
 );

@@ -3,17 +3,17 @@ const app = express();
 const mongoose = require('mongoose');
 const startupDebug = require('debug', 'app:startup');
 const users = require('./routes/users');
-const dashboard = require('./routes/dashboard');
+const profile = require('./routes/profile');
 const passport = require('passport');
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
 app.use(function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
     'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
   );
   next();
 });
@@ -35,7 +35,7 @@ app.use(passport.initialize());
 require('./config/passport.js')(passport);
 
 app.use('/api/users', users);
-app.use('/api/dashboard', dashboard);
+app.use('/api/profile', profile);
 
 const port = process.env.PORT || 5000;
 

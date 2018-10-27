@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { LogoutUser } from '../store/actions/authActions';
+import { getData } from '../store/actions/dataActions';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';
 import isEmpty from '../utils/isEmpty';
@@ -50,10 +51,12 @@ Dashboard.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  auth: state.auth
+  auth: state.auth,
+  data: state.data
 });
 const mapDispatchToProps = dispatch => ({
-  onLogoutUser: () => dispatch(LogoutUser())
+  onLogoutUser: () => dispatch(LogoutUser()),
+  onGetData: () => dispatch(getData())
 });
 
 export default connect(

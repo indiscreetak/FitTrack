@@ -71,7 +71,7 @@ router.post('/login', (req, res) => {
   });
 });
 
-// @route GET /api/users/current
+// @route GET /api/:user/data
 // @desc Return current user
 // @access PRIVATE
 
@@ -79,8 +79,7 @@ router.get(
   '/current',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    console.log(req);
-    res.json({ msg: `Welcome back, ${req.user.name}` });
+    res.json(req.user);
   }
 );
 
