@@ -1,0 +1,10 @@
+.progressBar {
+    transform: rotate(-90deg);
+}
+
+
+.text {
+    font-size: 6px;
+    letter-spacing: 0.2em;
+    transform: rotate(90deg)
+}

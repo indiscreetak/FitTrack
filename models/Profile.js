@@ -7,9 +7,7 @@ const ProfileSchema = new Schema({
     ref: 'users'
   },
   handle: {
-    type: String,
-    required: true,
-    max: 40
+    type: String
   },
   steps: Number,
   calories: Number,
@@ -18,7 +16,7 @@ const ProfileSchema = new Schema({
   exercises: [
     {
       date: { type: Number, default: Date.now() },
-      type: String,
+      activity: String,
       distance: Number,
       calburn: Number
     }

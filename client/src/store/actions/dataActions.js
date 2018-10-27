@@ -20,3 +20,7 @@ export const getData = () => dispatch => {
       })
     );
 };
+
+export const wipeData = () => ({
+  type: actions.WIPE_DATA
+});

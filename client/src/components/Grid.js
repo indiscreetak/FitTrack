@@ -1,7 +1,25 @@
 import React, { Component } from 'react';
-import { Tile, Box } from 'bloomer';
+import {
+  Tile,
+  Box as Container,
+  Title,
+  Media,
+  MediaLeft,
+  MediaContent,
+  Content,
+  Image
+} from 'bloomer';
 import { connect } from 'react-redux';
 import { getData } from '../store/actions/dataActions';
+import ProgressBar from './progressBar';
+import styled from 'styled-components';
+
+const Box = styled(Container)`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
 
 class Grid extends Component {
   componentDidMount() {
@@ -16,47 +34,98 @@ class Grid extends Component {
       recentExercises
     } = this.props.data;
 
-    const walk = <div>walk more</div>;
     return (
       <Tile isAncestor style={{ margin: '2em' }}>
-        <Tile isVertical isParent>
-          <Tile isChild>
-            <Box>{steps ? steps : 'Walk More'} steps</Box>
+        <Tile>
+          <Tile isParent isVertical>
+            <Tile isChild>
+              <Box>
+                <Title isSize="5">STEPS</Title>
+                <ProgressBar
+                  type={steps ? steps + ' Steps' : 'No Steps Data'}
+                  name="steps"
+                />
+              </Box>
+            </Tile>
+            <Tile isChild>
+              <Box>
+                <Title isSize="5">CALORIES</Title>
+                <ProgressBar
+                  type={
+                    calories ? calories + ' calories burned' : 'No Calorie Data'
+                  }
+                  name="calories"
+                  target="6000"
+                />
+              </Box>
+            </Tile>
           </Tile>
-          <Tile isChild>
-            <Box>{calories ? calories : 'N/A'} Calories</Box>
-          </Tile>
-        </Tile>
-        <Tile isVertical isParent>
-          <Tile isChild>
-            <Box>{weight ? weight : 'N/A'} kg</Box>
-          </Tile>
-          <Tile isChild>
-            <Box>
-              Friends :
-              {friends.map((friend, key) => (
-                <ul key={key}>
-                  <li key={key}>{friend}</li>
-                </ul>
-              ))}
-            </Box>
+          <Tile isParent isVertical>
+            <Tile isChild>
+              <Box>
+                <Title isSize="5">CURRENT WEIGHT</Title>
+                <ProgressBar
+                  type={weight ? weight + ' KG' : 'No Weight Data'}
+                  name="weight"
+                />
+              </Box>
+            </Tile>
+            <Tile isChild>
+              <Box>
+                <Title isSize="5">Friends</Title>
+                {friends
+                  ? friends.map((friend, key) => (
+                      <Box>
+                        <Media>
+                          <MediaLeft>
+                            <img
+                              alt="Prop"
+                              style={{
+                                height: '64px',
+                                width: '64px',
+                                borderRadius: '50%'
+                              }}
+                              src={
+                                `http://i.pravatar.cc/150?img= ` +
+                                Math.random() * 20
+                              }
+                            />
+                          </MediaLeft>
+                          <MediaContent>
+                            <Content>
+                              <span key={key}>{friend}</span>
+                            </Content>
+                          </MediaContent>
+                        </Media>
+                      </Box>
+                    ))
+                  : 'no friends'}
+              </Box>
+            </Tile>
           </Tile>
         </Tile>
         <Tile isParent>
           <Tile isChild>
             <Box>
-              {recentExercises.map((exercise, key) => (
-                <Box key={key + Math.random()}>
-                  <ul key={key + Math.random()}>
-                    <li key={key + Math.random()}>Type: {exercise.type}</li>
-                    <li key={key + Math.random()}>Date: {exercise.date}</li>
-                    <li key={key}>Distance: {exercise.distance}</li>
-                    <li key={key + Math.random()}>
-                      Calories Burnt: {exercise.calBurn}
-                    </li>
-                  </ul>
-                </Box>
-              ))}
+              {recentExercises ? (
+                recentExercises.map((exercise, key) => (
+                  <Box key={key + Math.random()}>
+                    <ul key={key + Math.random()}>
+                      <li key={key + Math.random()}>
+                        Type: {exercise.activity}
+                      </li>
+                      <li key={key + Math.random()}>Date: {exercise.date}</li>
+                      <li key={key}>Distance: {exercise.distance}</li>
+                      <li key={key + Math.random()}>
+                        Calories Burnt:
+                        {exercise.calburn ? exercise.calburn : 'No Data'}
+                      </li>
+                    </ul>
+                  </Box>
+                ))
+              ) : (
+                <span>No Data</span>
+              )}
             </Box>
           </Tile>
         </Tile>

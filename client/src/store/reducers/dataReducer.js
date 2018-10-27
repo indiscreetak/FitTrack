@@ -4,11 +4,8 @@ const initialState = {
   steps: null,
   weight: null,
   calories: null,
-  friends: ['Tom', 'Steve', 'Jim'],
-  recentExercises: [
-    { date: Date.now(), type: 'running', distance: 23, calBurn: 343 },
-    { date: Date.now(), type: 'cycling', distance: 243, calBurn: 34443 }
-  ]
+  friends: null,
+  recentExercises: null
 };
 
 export default (state = initialState, action) => {
@@ -18,8 +15,13 @@ export default (state = initialState, action) => {
         ...state,
         steps: action.payload.steps,
         weight: action.payload.weight,
-        calories: action.payload.calories
+        calories: action.payload.calories,
+        friends: action.payload.friends,
+        recentExercises: action.payload.exercises
       };
+
+    case actions.WIPE_DATA:
+      return initialState;
 
     default:
       return state;

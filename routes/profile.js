@@ -73,6 +73,10 @@ router.post(
     if (req.body.steps) profileFields.steps = req.body.steps;
     if (req.body.calories) profileFields.calories = req.body.calories;
     if (req.body.weight) profileFields.weight = req.body.weight;
+    if (req.body.friends !== 'undefined') {
+      const trim = req.body.friends.trim();
+      profileFields.friends = trim.split(',');
+    }
 
     Profile.findOne({ user: req.user.id }).then(profile => {
       if (profile) {
@@ -85,20 +89,47 @@ router.post(
           .catch(err => res.json('an error'));
       } else {
         // Check if handle exits
-        Profile.findOne({ handle: req.body.handle })
+        Profile.findOne({ user: req.user.id })
           .then(profile => {
             if (profile) {
-              errors.handle = 'That handle already exists';
-              res.status(400).json(errors);
-            } else {
               new Profile(profileFields)
                 .save()
                 .then(profile => res.json(profile));
+            } else {
+              errors.handle = 'User doesnt exist';
+              res.status(400).json(errors);
             }
           })
           .catch(err => res.status(400).json('errordfdfd' + err));
       }
     });
+  }
+);
+
+module.exports = router;
+
+router.post(
+  '/exercises',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    const errors = {};
+
+    const exerciseFields = {
+      date: Date.now(),
+      activity: req.body.exerciseActivity,
+      distance: req.body.exerciseDistance,
+      calburn: req.body.exerciseCalBurn
+    };
+
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        profile.exercises.unshift(exerciseFields);
+
+        profile.save().then(profile => res.json(profile));
+      })
+      .catch(err =>
+        res.status(404).json('No profile found for ' + req.user.id)
+      );
   }
 );
 

@@ -2,6 +2,7 @@ import axios from 'axios';
 import * as actions from './types';
 import setAuthToken from '../../utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
+import { wipeData } from './dataActions';
 
 // Register User
 export const registerUser = (userData, history) => dispatch => {
@@ -53,4 +54,5 @@ export const LogoutUser = () => dispatch => {
   localStorage.removeItem('jwtToken');
   setAuthToken(false);
   dispatch(setCurrentUser({}));
+  dispatch(wipeData());
 };

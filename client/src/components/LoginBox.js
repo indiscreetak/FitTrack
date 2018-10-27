@@ -67,6 +67,11 @@ class LoginBox extends Component {
           config={{ tension: 40, friction: 7, overshootClamping: true }}
         >
           {styles => {
+            let disabled = false;
+
+            if (this.state.email.length < 5 && this.state.password.length < 8)
+              disabled = true;
+
             return (
               <Box style={styles}>
                 <form onSubmit={this.loginUser}>
@@ -92,7 +97,7 @@ class LoginBox extends Component {
                     <Label>Password: </Label>
                     <Control>
                       <Input
-                        type="text"
+                        type="password"
                         placeholder="Text input"
                         name="password"
                         onChange={this.handleChange}
@@ -100,8 +105,6 @@ class LoginBox extends Component {
                       />
                     </Control>
                   </Field>
-                  <div>{this.state.email}</div>
-                  <div>{this.state.password}</div>
                   <Field isGrouped>
                     <Control>
                       <Button
@@ -111,7 +114,7 @@ class LoginBox extends Component {
                         type="submit"
                         isColor="primary"
                         disabled={
-                          this.state.email.length < 5 &&
+                          this.state.email.length < 5 ||
                           this.state.password.length < 8
                             ? true
                             : false
