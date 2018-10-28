@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Switch, Route, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import './App.css';
 import LoginBox from './components/LoginBox';
 import Dashboard from './containers/Dashboard';
@@ -9,27 +10,31 @@ import store from './store/store';
 import setAuthToken from './utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
 import { setCurrentUser, LogoutUser } from './store/actions/authActions';
-
-if (localStorage.jwtToken) {
-  setAuthToken(localStorage.jwtToken);
-
-  const decoded = jwt_decode(localStorage.jwtToken);
-
-  store.dispatch(setCurrentUser(decoded));
-
-  const currentTime = Date.now() / 1000;
-  if (decoded.exp < currentTime) {
-    store.dispatch(LogoutUser());
-    this.props.history.push('/login');
-  }
-}
+import noMatch from './containers/noMatch';
 
 class App extends Component {
   state = {
-    clicked: true
+    clicked: false
   };
 
-  clicked = () => {
+  componentDidMount() {
+    if (localStorage.jwtToken) {
+      setAuthToken(localStorage.jwtToken);
+
+      const decoded = jwt_decode(localStorage.jwtToken);
+
+      store.dispatch(setCurrentUser(decoded));
+
+      const currentTime = Date.now() / 1000;
+      if (decoded.exp < currentTime) {
+        store.dispatch(LogoutUser());
+        this.props.history.push('/');
+      }
+    }
+  }
+
+  clicked = e => {
+    e.preventDefault();
     this.setState(prevState => ({ clicked: !prevState.clicked }));
   };
 
@@ -41,6 +46,7 @@ class App extends Component {
             <Route path="/dashboard" component={Dashboard} />
             <Route
               path="/register"
+              exact
               render={() => (
                 <Register
                   clicked={this.clicked}
@@ -48,16 +54,34 @@ class App extends Component {
                 />
               )}
             />
+            <Route
+              exact
+              path="/login"
+              render={() => (
+                <LoginBox
+                  clicked={this.clicked}
+                  clickedState={!this.state.clicked}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/"
+              render={props => (
+                <div>
+                  <LoginBox
+                    clicked={this.clicked}
+                    clickedState={this.state.clicked}
+                  />
+                  <Register
+                    clicked={this.clicked}
+                    clickedState={this.state.clicked}
+                  />
+                </div>
+              )}
+            />
+            <Route component={noMatch} />
           </Switch>
-          <Route
-            path="/login"
-            render={() => (
-              <LoginBox
-                clicked={this.clicked}
-                clickedState={this.state.clicked}
-              />
-            )}
-          />
         </div>
       </Provider>
     );

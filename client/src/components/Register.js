@@ -54,11 +54,11 @@ class Register extends Component {
       <Spring
         to={{
           width: '50%',
-          margin: '0.5em auto',
-          position: 'relative',
-          opacity: !onTop ? 1 : 0.4,
-          zIndex: 2,
-          transform: !onTop ? 'translateY(15em)' : 'translateY(15em)'
+          margin: '25% 25%',
+          position: 'abosolute',
+          opacity: onTop ? 1 : 0,
+          zIndex: onTop ? 2 : 1,
+          display: onTop ? 'block' : 'none'
         }}
         config={{ tension: 170, overshootClamping: true }}
       >
@@ -114,17 +114,29 @@ class Register extends Component {
                   <Control>
                     <Button
                       style={{
-                        display: this.props.clickedState ? 'none' : 'block'
+                        display: this.props.clickedState ? 'block' : 'none'
                       }}
                       type="submit"
                       isColor="danger"
                     >
                       REGISTER
                     </Button>
+                    <Label style={{ marginTop: '1em' }}>
+                      Already have an account?
+                    </Label>
+                    <Button
+                      onClick={this.props.clicked}
+                      type="submit"
+                      isColor="success"
+                    >
+                      LOGIN
+                    </Button>
+                  </Control>
+                  <Control>
                     <Button
                       onClick={this.props.clicked}
                       style={{
-                        display: this.props.clickedState ? 'block' : 'none'
+                        display: this.props.clickedState ? 'none' : 'block'
                       }}
                       isColor="primary"
                     >

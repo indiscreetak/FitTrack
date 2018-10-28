@@ -5,6 +5,8 @@
 
 .text {
     font-size: 6px;
-    letter-spacing: 0.2em;
-    transform: rotate(90deg)
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    transform: rotate(90deg);
+    font-family: 'Roboto'
 }

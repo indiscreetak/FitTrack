@@ -11,13 +11,13 @@ import Grid from '../components/Grid';
 class Dashboard extends Component {
   componentDidMount() {
     if (!this.props.auth.isAuthenticated) {
-      this.props.history.push('/login');
+      this.props.history.push('/');
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (!nextProps.auth.isAuthenticated) {
-      this.props.history.push('/login');
+      this.props.history.push('/');
     }
   }
   render() {

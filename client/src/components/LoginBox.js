@@ -58,13 +58,13 @@ class LoginBox extends Component {
         <Spring
           to={{
             width: '50%',
-            margin: '0.5em auto',
-            position: 'relative',
-            opacity: onTop ? 1 : 0.4,
-            zIndex: onTop ? 2 : 1,
-            transform: onTop ? 'translateY(1em)' : 'translateY(0em)'
+            margin: '25% 25%',
+            position: 'absolute',
+            opacity: !onTop ? 1 : 0,
+            zIndex: 2,
+            display: !onTop ? 'block' : 'none'
           }}
-          config={{ tension: 40, friction: 7, overshootClamping: true }}
+          config={{ friction: 7, overshootClamping: true }}
         >
           {styles => {
             let disabled = false;
@@ -109,7 +109,7 @@ class LoginBox extends Component {
                     <Control>
                       <Button
                         style={{
-                          display: this.props.clickedState ? 'block' : 'none'
+                          display: this.props.clickedState ? 'none' : 'block'
                         }}
                         type="submit"
                         isColor="primary"
@@ -122,10 +122,23 @@ class LoginBox extends Component {
                       >
                         LOGIN
                       </Button>
+
+                      <Label style={{ marginTop: '1em' }}>
+                        Don't have an account?
+                      </Label>
+                      <Button
+                        onClick={this.props.clicked}
+                        type="submit"
+                        isColor="danger"
+                      >
+                        REGISTER
+                      </Button>
+                    </Control>
+                    <Control>
                       <Button
                         onClick={this.props.clicked}
                         style={{
-                          display: this.props.clickedState ? 'none' : 'block'
+                          display: this.props.clickedState ? 'block' : 'none'
                         }}
                         isColor="primary"
                       >
