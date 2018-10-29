@@ -5,6 +5,9 @@ import {
   NavbarItem,
   NavbarDivider,
   NavbarDropdown,
+  NavbarStart,
+  NavbarBurger,
+  NavbarMenu,
   Button
 } from 'bloomer';
 import styled from 'styled-components';
@@ -32,7 +35,8 @@ const NotificationItem = styled(NavbarItem)`
 class navbar extends Component {
   state = {
     loading: false,
-    dropdownOpen: false
+    dropdownOpen: false,
+    isActive: false
   };
 
   syncDevice = () => {
@@ -48,6 +52,10 @@ class navbar extends Component {
   };
   onMouseLeave = () => {
     this.setState({ dropdownOpen: false });
+  };
+
+  onClickNav = () => {
+    this.setState(prevState => ({ isActive: !prevState.isActive }));
   };
   render() {
     return (
@@ -78,22 +86,30 @@ class navbar extends Component {
               </Dropdown>
             )}
           </NotificationItem>
-          <NavbarItem>
-            <Button isColor="danger" onClick={this.props.logoutUser}>
-              LOGOUT
-            </Button>
-          </NavbarItem>
-          <NavbarItem>
-            <Button isColor="info" onClick={this.syncDevice}>
-              SYNC WITH DEVICE
-            </Button>
-          </NavbarItem>
-          {this.state.loading && (
-            <NavbarItem>
-              <span className="fas fa-sync fa-spin fa-lg" />
-            </NavbarItem>
-          )}
+          <NavbarBurger
+            isActive={this.state.isActive}
+            onClick={this.onClickNav}
+          />
         </NavbarBrand>
+        <NavbarMenu isActive={this.state.isActive} onClick={this.onClickNav}>
+          <NavbarStart>
+            <NavbarItem>
+              <Button isColor="danger" onClick={this.props.logoutUser}>
+                LOGOUT
+              </Button>
+            </NavbarItem>
+            <NavbarItem>
+              <Button isColor="info" onClick={this.syncDevice}>
+                SYNC WITH DEVICE
+              </Button>
+              {this.state.loading && (
+                <NavbarItem>
+                  <span className="fas fa-sync fa-spin fa-lg" />
+                </NavbarItem>
+              )}
+            </NavbarItem>
+          </NavbarStart>
+        </NavbarMenu>
       </Navbar>
     );
   }

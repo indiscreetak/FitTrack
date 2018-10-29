@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { LogoutUser } from '../store/actions/authActions';
+import { resetErrors } from '../store/actions/errorActions';
 import { getData } from '../store/actions/dataActions';
 import PropTypes from 'prop-types';
 import { Link, withRouter } from 'react-router-dom';

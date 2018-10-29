@@ -5,8 +5,10 @@ import {
   Label,
   Control,
   Input,
-  Button,
-  Notification
+  Button as Buttons,
+  Notification,
+  Columns,
+  Column
 } from 'bloomer';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
@@ -14,17 +16,24 @@ import { Spring } from 'react-spring';
 import { connect } from 'react-redux';
 import { loginUser } from '../store/actions/authActions';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { resetErrors } from '../store/actions/errorActions';
 
 axios.defaults.baseURL = 'http://localhost:5000';
 
+const Button = styled(Buttons)`
+  cursor: pointer;
+`;
+
 class LoginBox extends Component {
   state = {
-    email: '',
-    password: '',
+    email: 'test@account.com',
+    password: 'testaccount',
     errors: []
   };
 
   componentDidMount() {
+    this.props.onResetErrors();
     if (this.props.auth.isAuthenticated) {
       this.props.history.push('/dashboard');
     }
@@ -55,102 +64,102 @@ class LoginBox extends Component {
 
     return (
       <React.Fragment>
-        <Spring
-          to={{
-            width: '50%',
-            margin: '25% 25%',
-            position: 'absolute',
-            opacity: !onTop ? 1 : 0,
-            zIndex: 2,
-            display: !onTop ? 'block' : 'none'
-          }}
-          config={{ friction: 7, overshootClamping: true }}
-        >
-          {styles => {
-            let disabled = false;
+        <Columns isCentered isVCentered>
+          <Column isSize={{ mobile: 12, default: 5 }}>
+            <Spring
+              to={{
+                opacity: !onTop ? 1 : 0,
+                zIndex: 2,
+                display: !onTop ? 'block' : 'none'
+              }}
+              config={{ tension: 170, overshootClamping: true }}
+            >
+              {styles => {
+                return (
+                  <Box style={styles}>
+                    <form onSubmit={this.loginUser}>
+                      <Field>
+                        <h1 className="title is-2">Login</h1>
+                        {this.props.errors.message ? (
+                          <Notification isColor="danger">
+                            {this.props.errors.message}
+                          </Notification>
+                        ) : null}
+                        <Label>Email: </Label>
+                        <Control>
+                          <Input
+                            type="text"
+                            name="email"
+                            onChange={this.handleChange}
+                            required
+                            value={this.state.email}
+                          />
+                        </Control>
+                      </Field>
+                      <Field>
+                        <Label>Password: </Label>
+                        <Control>
+                          <Input
+                            type="password"
+                            name="password"
+                            onChange={this.handleChange}
+                            required
+                            value={this.state.password}
+                          />
+                        </Control>
+                      </Field>
+                      <Field isGrouped>
+                        <Control>
+                          <Button
+                            style={{
+                              display: this.props.clickedState
+                                ? 'none'
+                                : 'block'
+                            }}
+                            type="submit"
+                            isColor="primary"
+                            disabled={
+                              this.state.email.length < 5 ||
+                              this.state.password.length < 8
+                                ? true
+                                : false
+                            }
+                          >
+                            LOGIN
+                          </Button>
 
-            if (this.state.email.length < 5 && this.state.password.length < 8)
-              disabled = true;
-
-            return (
-              <Box style={styles}>
-                <form onSubmit={this.loginUser}>
-                  <Field>
-                    <h1 className="title is-2">Login</h1>
-                    {this.props.errors.message ? (
-                      <Notification isColor="danger">
-                        {this.props.errors.message}
-                      </Notification>
-                    ) : null}
-                    <Label>Email: </Label>
-                    <Control>
-                      <Input
-                        type="text"
-                        placeholder="Text input"
-                        name="email"
-                        onChange={this.handleChange}
-                        required
-                      />
-                    </Control>
-                  </Field>
-                  <Field>
-                    <Label>Password: </Label>
-                    <Control>
-                      <Input
-                        type="password"
-                        placeholder="Text input"
-                        name="password"
-                        onChange={this.handleChange}
-                        required
-                      />
-                    </Control>
-                  </Field>
-                  <Field isGrouped>
-                    <Control>
-                      <Button
-                        style={{
-                          display: this.props.clickedState ? 'none' : 'block'
-                        }}
-                        type="submit"
-                        isColor="primary"
-                        disabled={
-                          this.state.email.length < 5 ||
-                          this.state.password.length < 8
-                            ? true
-                            : false
-                        }
-                      >
-                        LOGIN
-                      </Button>
-
-                      <Label style={{ marginTop: '1em' }}>
-                        Don't have an account?
-                      </Label>
-                      <Button
-                        onClick={this.props.clicked}
-                        type="submit"
-                        isColor="danger"
-                      >
-                        REGISTER
-                      </Button>
-                    </Control>
-                    <Control>
-                      <Button
-                        onClick={this.props.clicked}
-                        style={{
-                          display: this.props.clickedState ? 'block' : 'none'
-                        }}
-                        isColor="primary"
-                      >
-                        LOGIN
-                      </Button>
-                    </Control>
-                  </Field>
-                </form>
-              </Box>
-            );
-          }}
-        </Spring>
+                          <Label style={{ marginTop: '1em' }}>
+                            Don't have an account?
+                          </Label>
+                          <Button
+                            onClick={this.props.clicked}
+                            type="submit"
+                            isColor="danger"
+                          >
+                            REGISTER
+                          </Button>
+                        </Control>
+                        <Control>
+                          <Button
+                            onClick={this.props.clicked}
+                            style={{
+                              display: this.props.clickedState
+                                ? 'block'
+                                : 'none'
+                            }}
+                            isColor="primary"
+                          >
+                            LOGIN
+                          </Button>
+                        </Control>
+                      </Field>
+                    </form>
+                  </Box>
+                );
+              }}
+            </Spring>
+          </Column>
+        </Columns>
       </React.Fragment>
     );
   }
@@ -169,7 +178,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
   return {
-    onLoginUser: data => dispatch(loginUser(data))
+    onLoginUser: data => dispatch(loginUser(data)),
+    onResetErrors: () => dispatch(resetErrors())
   };
 };
 

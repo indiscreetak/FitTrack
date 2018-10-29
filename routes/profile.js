@@ -73,7 +73,7 @@ router.post(
     if (req.body.steps) profileFields.steps = req.body.steps;
     if (req.body.calories) profileFields.calories = req.body.calories;
     if (req.body.weight) profileFields.weight = req.body.weight;
-    if (req.body.friends !== 'undefined') {
+    if (req.body.friends) {
       const trim = req.body.friends.trim();
       profileFields.friends = trim.split(',');
     }
@@ -91,7 +91,7 @@ router.post(
         // Check if handle exits
         Profile.findOne({ user: req.user.id })
           .then(profile => {
-            if (profile) {
+            if (!profile) {
               new Profile(profileFields)
                 .save()
                 .then(profile => res.json(profile));

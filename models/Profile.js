@@ -16,7 +16,7 @@ const ProfileSchema = new Schema({
   exercises: [
     {
       date: { type: Number, default: Date.now() },
-      activity: String,
+      activity: { type: String, required: true },
       distance: Number,
       calburn: Number
     }

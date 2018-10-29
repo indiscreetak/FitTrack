@@ -11,6 +11,16 @@ import setAuthToken from './utils/setAuthToken';
 import jwt_decode from 'jwt-decode';
 import { setCurrentUser, LogoutUser } from './store/actions/authActions';
 import noMatch from './containers/noMatch';
+import styled from 'styled-components';
+import { resetErrors } from './store/actions/errorActions';
+
+const Wrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+`;
 
 class App extends Component {
   state = {
@@ -35,7 +45,17 @@ class App extends Component {
 
   clicked = e => {
     e.preventDefault();
+    store.dispatch(resetErrors());
+
     this.setState(prevState => ({ clicked: !prevState.clicked }));
+  };
+
+  loginRedirect = () => {
+    this.props.history.push('/login');
+  };
+
+  RegisterRedirect = () => {
+    this.props.history.push('/register');
   };
 
   render() {
@@ -48,10 +68,7 @@ class App extends Component {
               path="/register"
               exact
               render={() => (
-                <Register
-                  clicked={this.clicked}
-                  clickedState={this.state.clicked}
-                />
+                <Register clicked={this.loginRedirect} clickedState={true} />
               )}
             />
             <Route
@@ -59,8 +76,8 @@ class App extends Component {
               path="/login"
               render={() => (
                 <LoginBox
-                  clicked={this.clicked}
-                  clickedState={!this.state.clicked}
+                  clicked={this.RegisterRedirect}
+                  clickedState={false}
                 />
               )}
             />
@@ -68,7 +85,7 @@ class App extends Component {
               exact
               path="/"
               render={props => (
-                <div>
+                <React.Fragment>
                   <LoginBox
                     clicked={this.clicked}
                     clickedState={this.state.clicked}
@@ -77,7 +94,7 @@ class App extends Component {
                     clicked={this.clicked}
                     clickedState={this.state.clicked}
                   />
-                </div>
+                </React.Fragment>
               )}
             />
             <Route component={noMatch} />

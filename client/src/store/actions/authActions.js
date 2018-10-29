@@ -5,7 +5,7 @@ import jwt_decode from 'jwt-decode';
 import { wipeData } from './dataActions';
 
 // Register User
-export const registerUser = (userData, history) => dispatch => {
+export const registerUser = userData => dispatch => {
   axios
     .post('/api/users/register', userData)
     .then(res => dispatch(loginUser(userData)))
