@@ -77,7 +77,7 @@ class LoginBox extends Component {
               {styles => {
                 return (
                   <Box style={styles}>
-                    <form onSubmit={this.loginUser}>
+                    <form onSubmit={this.loginUser.bind(this)}>
                       <Field>
                         <h1 className="title is-2">Login</h1>
                         {this.props.errors.message ? (

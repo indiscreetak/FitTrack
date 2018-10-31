@@ -10,7 +10,6 @@ const progressBar = props => {
 
   const circumference = Math.PI * (radius + radius);
   const totalSteps = circumference * (steps / target);
-  console.log(totalSteps);
 
   return (
     <svg class="progressBar" viewBox="0 0 120 120">

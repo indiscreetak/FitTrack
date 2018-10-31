@@ -71,7 +71,7 @@ class Register extends Component {
             {styles => {
               return (
                 <Box style={styles}>
-                  <form onSubmit={this.registerUser}>
+                  <form onSubmit={this.registerUser.bind(this)}>
                     <h1 className="title is-2" onClick={this.props.clicked}>
                       Register
                     </h1>
