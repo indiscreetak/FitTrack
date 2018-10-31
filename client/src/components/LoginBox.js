@@ -19,8 +19,6 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { resetErrors } from '../store/actions/errorActions';
 
-axios.defaults.baseURL = 'http://localhost:5000';
-
 const Button = styled(Buttons)`
   cursor: pointer;
 `;
