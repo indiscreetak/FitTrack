@@ -26,11 +26,16 @@ const Button = styled(Buttons)`
 `;
 
 class LoginBox extends Component {
-  state = {
-    email: 'test@account.com',
-    password: 'testaccount',
-    errors: []
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      email: 'test@account.com',
+      password: 'testaccount',
+      errors: []
+    };
+
+    this.loginUser = this.loginUser.bind(this);
+  }
 
   componentDidMount() {
     this.props.onResetErrors();
@@ -77,7 +82,7 @@ class LoginBox extends Component {
               {styles => {
                 return (
                   <Box style={styles}>
-                    <form onSubmit={this.loginUser.bind(this)}>
+                    <form onSubmit={this.loginUser}>
                       <Field>
                         <h1 className="title is-2">Login</h1>
                         {this.props.errors.message ? (
